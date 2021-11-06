@@ -65,4 +65,4 @@ export default function Component ({ onSuccess, onError, onSignout }) {
 
 ## License
 
-MIT © [Tun Lin Phyo](https://github.com/Tun Lin Phyo)
+MIT © [Tun Lin Phyo](https://github.com/tunlinphyo)
