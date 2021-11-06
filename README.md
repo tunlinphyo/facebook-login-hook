@@ -37,6 +37,7 @@ export default function Component ({ onSuccess, onError, onSignout }) {
   }
   async function handleSignout() {
     const result = await signOut()
+    setLoggedin(false)
     onSignout(result)
   }
 
