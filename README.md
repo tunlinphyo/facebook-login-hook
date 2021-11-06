@@ -13,15 +13,53 @@ npm install --save facebook-login-hook
 ## Usage
 
 ```jsx
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 
-import MyComponent from 'facebook-login-hook'
-import 'facebook-login-hook/dist/index.css'
+import useFacebookLogin from 'facebook-login-hook'
 
-class Example extends Component {
-  render() {
-    return <MyComponent />
+export default function Component ({ onSuccess, onError, onSignout }) {
+  const [ loggedin, setLoggedin ] = useState(false)
+
+  const { signIn, signOut, loaded } = useFacebookLogin({
+    appId: FACEBOOK_APP_ID,
+    version: FACEBOOK_APP_VERSION,
+    onSuccess: handleSuccess,
+    onFailure: handleFailure,
+  })
+
+  async function handleSuccess(response) {
+    setLoggedin(true)
+    const user = await getUserData(response)
+    onSuccess(user)
   }
+  function handleFailure(error) {
+    onError(error)
+  }
+  async function handleSignout() {
+    const result = await signOut()
+    onSignout(result)
+  }
+
+  function getUserData(response) {
+    return new Promise(resolve => {
+      FB.api('/me', (response) => {
+        resolve(response)
+      })
+    })
+  }
+  return (
+    {
+      loggedin ? (
+        <button disabled={!loaded} onClick={signIn}>
+          login with facebook
+        </button>
+      ) : (
+        <button disabled={!loaded} onClick={handleSignout}>
+          logout from facebook
+        </button>
+      )
+    }
+  )
 }
 ```
 
